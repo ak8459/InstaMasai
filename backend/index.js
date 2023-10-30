@@ -12,9 +12,7 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/posts', postRouter)
 
-app.get('/', (req, res) => {
-    res.send('Hello World')
-})
+
 
 app.listen(8080, async () => {
     try {

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     age: Number,
     city: String,
-    is_married: Boolean
+    is_married: Boolean,
 
 }, {
     versionKey: false

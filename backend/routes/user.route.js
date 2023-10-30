@@ -35,7 +35,7 @@ userRouter.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
-         
+
         if (!user) {
             return res.status(400).json({ msg: "User does not exist" });
         }
@@ -53,6 +53,16 @@ userRouter.post('/login', async (req, res) => {
 })
 
 
+userRouter.get('/logout', async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    try {
+        blackList.push(token)
+        res.status(200).send({ "msg": "User has been logged out" })
+    } catch (error) {
+        res.status(400).send({ "error": error })
+    }
+
+})
 
 
 

@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
 
-const mongoose = require('mongoose');
-
 
 const userSchema = new mongoose.Schema({
     name: String,
@@ -10,7 +8,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     age: Number,
     city: String,
-    isMarried: Boolean
+    is_married: Boolean
 
 }, {
     versionKey: false

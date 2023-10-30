@@ -2,6 +2,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { User } = require('../model/users.model');
+const jsonwebtoken = require('jsonwebtoken');
 const userRouter = express.Router();
 
 // Sign up
@@ -30,11 +31,11 @@ userRouter.post('/register', async (req, res) => {
 })
 
 // sign in
-
 userRouter.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
+         
         if (!user) {
             return res.status(400).json({ msg: "User does not exist" });
         }

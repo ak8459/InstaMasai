@@ -1,11 +1,13 @@
 const jwt = require('jsonwebtoken');
-const { blacklist } = require('../blacklist')
-const auth = (req, res, next) => {
+const { blackListModel } = require('../model/token.model')
+const auth = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
     if (token) {
-        if (blacklist?.includes(token)) {
-            res.send(401).send({ "message": "please login again!" })
+        let existingToken = await blackListModel?.find({ blackList: { $in: token } })
+        if (existingToken?.length > 0) {
+            return res.status(401).send('Unauthorized')
         }
+
         jwt.verify(token, 'user-key', (err, decoded) => {
             if (decoded) {
                 // console.log(decoded);

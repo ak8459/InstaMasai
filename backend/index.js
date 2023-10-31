@@ -3,7 +3,7 @@ const { connection } = require('./database/db');
 const { userRouter } = require('./routes/user.route');
 require('dotenv').config()
 const { postRouter } = require('./routes/post.route')
-let port = process.env.PORT || 3000;
+let port = process.env.PORT
 const app = express();
 app.use(express.json());
 
@@ -14,7 +14,7 @@ app.use('/posts', postRouter)
 
 
 
-app.listen(8080, async () => {
+app.listen(port, async () => {
     try {
         await connection
         console.log(`Server is running on port ${8080}`);

@@ -87,10 +87,11 @@ postRouter.patch('/update/:id', async (req, res) => {
 
     const { id } = req.params
     const note = await PostModel.findOne({ _id: id });
-    console.log(note, id);
+    
     try {
         if (req.body.email == note.email) {
-             
+
+
             await PostModel.findByIdAndUpdate({ _id: id }, req.body);
 
             res.status(200).json({ msg: "Post updated successfully" });

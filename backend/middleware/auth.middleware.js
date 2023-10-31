@@ -3,7 +3,8 @@ const { blackListModel } = require('../model/token.model')
 const auth = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
     if (token) {
-        let existingToken = await blackListModel?.find({ blackList: { $in: token } })
+        let existingToken = await blackListModel?.find({ blackList: token })
+        console.log(existingToken);
         if (existingToken?.length > 0) {
             return res.status(401).send('Unauthorized')
         }

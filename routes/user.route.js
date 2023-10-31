@@ -61,10 +61,9 @@ userRouter.get('/logout', async (req, res) => {
     console.log(token);
     try {
         if (token) {
-            // await BlackListModel.updateMany({}, { $push: { blackList: [token] } });
-            await BlackListModel.updateManyMany({ $push: { blackList: [token] } });
-            return res.status(200).send({ "msg": "User has been logged out" })
-        }
+            await BlackListModel.updateMany({}, { $push: { blacklist: [token] } });
+            res.status(200).json({ msg: "User has been logged out" });
+          }
 
     } catch (error) {
         res.status(400).send({ "error": error })

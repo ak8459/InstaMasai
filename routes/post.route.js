@@ -18,29 +18,46 @@ postRouter.post('/add', async (req, res) => {
 })
 
 postRouter.get('/', async (req, res) => {
-    const { minComments, device, maxComments, page } = req.query;
-    const postsPerPage = 3;
-    let filteredPosts = await PostModel.find({ userId: req.body.userId });
-    // Filter by user ID
+    const { minComments, maxComments, pageNo, limit, device1, device2 } = req.query;
+    // const postsPerPage = 3;
+    // let filteredPosts = await PostModel.find({ userId: req.body.userId });
+    const skip = (pageNo - 1) * limit;
+    const { userId } = req.body
+
+    let query = {};
+    if (userId) {
+        query.userId = userId
+    }
 
     // // Filter by min and max comments
     if (minComments && maxComments) {
 
-        filteredPosts = filteredPosts.filter(post => post.no_of_comments
-            >= minComments && post.no_of_comments
-            <= maxComments);
-        // console.log(filteredPosts);
+        query.no_of_comments = {
+            $and: [
+                { no_of_comments: { $gte: minComments } },
+                { no_of_comments: { $lte: maxComments } },
+            ],
+        }
     }
 
-    if (device) {
-        filteredPosts = filteredPosts.filter(post => post.device === device);
+    if (device1 && device2) {
+        query.device = {
+            $and: [
+                { device: { $eq: device1 } },
+                { device: { $eq: device2 } },
+            ],
+        }
+    } else if (device1) {
+        query.device = device1
+    } else if (device2) {
+        query.device = device2
     }
-    // Calculate pagination
-    const startIndex = (page - 1) * postsPerPage;
-    const endIndex = startIndex + postsPerPage;
-    const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
-
-    res.json(paginatedPosts);
+    try {
+        const posts = await PostModel.find(query).sort({ no_of_comments: 1 }).skip(skip).limit(limit);
+        res.status(200).json({ msg: "Users posts", posts });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
 })
 
 
@@ -87,7 +104,7 @@ postRouter.patch('/update/:id', async (req, res) => {
 
     const { id } = req.params
     const note = await PostModel.findOne({ _id: id });
-    
+
     try {
         if (req.body.email == note.email) {
 
